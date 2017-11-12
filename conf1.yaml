@@ -1,7 +1,7 @@
 # Comentaris
-networks:
+groups:
   - name: alumnes
-    address:
+    networks:
       - 192.168.16.0/24
       - 192.168.15.0/24
 

@@ -1,10 +1,10 @@
 # Comentaris
-networks:
+groups:
   - name: servidors
-    address:
+    networks:
       - 192.168.4.0/24
   - name: alumnes
-    address:
+    networks:
       - 192.168.9.0/24
       - 192.168.10.0/24
       - 192.168.15.0/24

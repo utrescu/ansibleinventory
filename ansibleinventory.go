@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
 	"github.com/utrescu/listIP"
@@ -12,19 +13,21 @@ import (
 )
 
 type configuration struct {
-	Name    string
-	Address []string
+	Name     string
+	Networks []string
 }
 
 type configurationList struct {
-	Networks []configuration
+	Groups []configuration
 }
 
 var (
 	portNumber int
 	timeout    string
 	filename   string
+	outputFile string
 	debug      bool
+	outFile    *os.File
 )
 
 func init() {
@@ -34,17 +37,24 @@ func init() {
 	flag.StringVar(&timeout, "t", "1000ms", "Network timeout")
 	flag.StringVar(&filename, "input", "conf.yaml", "Name of configuration time")
 	flag.StringVar(&filename, "i", "conf.yaml", "Name of configuration time")
+	flag.StringVar(&outputFile, "o", "", "Output file")
+	flag.StringVar(&outputFile, "output", "", "Output file")
 	flag.BoolVar(&debug, "debug", false, "verbose output")
 }
 
-func outputFormat(label string, resultats []string) {
+func outputFormat(outFile *os.File, label string, resultats []string) {
+
+	if outFile == nil {
+		outFile = os.Stdout
+	}
 	if len(resultats) > 0 {
-		fmt.Println("[" + label + "]")
+
+		fmt.Fprintln(outFile, "["+label+"]")
 
 		for i := range resultats {
-			fmt.Println(resultats[i])
+			fmt.Fprintln(outFile, resultats[i])
 		}
-		fmt.Println()
+		fmt.Fprintln(outFile, "")
 	}
 }
 
@@ -65,6 +75,14 @@ func main() {
 		panic("File '" + filename + "' not found")
 	}
 
+	if outputFile != "" {
+		outFile, err = os.OpenFile(outputFile, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
+		defer outFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	err = yaml.Unmarshal(source, &configs)
 	if err != nil {
 		fmt.Println("Incorrect format")
@@ -73,13 +91,13 @@ func main() {
 
 	// startTime := time.Now()
 
-	for tria := range configs.Networks {
+	for tria := range configs.Groups {
 		if debug == true {
-			fmt.Println("... Trying ", configs.Networks[tria].Address)
+			fmt.Println("... Trying", configs.Groups[tria].Name, ":", configs.Groups[tria].Networks)
 		}
-		rangs := configs.Networks[tria].Address
+		rangs := configs.Groups[tria].Networks
 		resultats, _ := listIP.Check(rangs, portNumber, timeout)
-		outputFormat(configs.Networks[tria].Name, resultats)
+		outputFormat(outFile, configs.Groups[tria].Name, resultats)
 	}
 
 	// scanDuration := time.Since(startTime)
