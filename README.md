@@ -45,6 +45,7 @@ The configuration is defined in a YAML file:
       networks:
         - 192.168.4.1
         - 192.168.4.2
+        - 192.168.4.254
     - name: hosts
       networks:
         - 192.168.9.0/24
