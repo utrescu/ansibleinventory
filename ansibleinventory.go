@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"time"
 
@@ -64,7 +63,8 @@ func main() {
 
 	_, err := time.ParseDuration(timeout)
 	if err != nil {
-		log.Fatal("Incorrect Duration\n", err)
+		fmt.Println("Incorrect Duration\n", err)
+		os.Exit(-1)
 	}
 
 	// Processar el fitxer yaml
@@ -72,21 +72,23 @@ func main() {
 
 	source, err := ioutil.ReadFile(filename)
 	if err != nil {
-		panic("File '" + filename + "' not found")
+		fmt.Println("File '" + filename + "' not found")
+		os.Exit(-1)
 	}
 
 	if outputFile != "" {
 		outFile, err = os.OpenFile(outputFile, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
 		defer outFile.Close()
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(-1)
 		}
 	}
 
-	err = yaml.Unmarshal(source, &configs)
+	err = yaml.UnmarshalStrict(source, &configs)
 	if err != nil {
-		fmt.Println("Incorrect format")
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(-1)
 	}
 
 	// startTime := time.Now()
