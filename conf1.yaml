@@ -1,0 +1,7 @@
+# Comentaris
+networks:
+  - name: alumnes
+    address:
+      - 192.168.16.0/24
+      - 192.168.15.0/24
+

@@ -1,0 +1,14 @@
+# Comentaris
+networks:
+  - name: servidors
+    address:
+      - 192.168.0.0/24
+  - name: routers
+    address:
+      - 192.168.88.1
+  - name: alumnes
+    address:
+      - 192.168.88.0/24
+      - 192.168.1.0/24
+      - 192.168.15.0/24
+      - 192.168.16.0/24
