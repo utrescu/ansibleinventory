@@ -23,6 +23,7 @@ type configurationList struct {
 var (
 	portNumber int
 	timeout    string
+	parallel   int
 	filename   string
 	outputFile string
 	debug      bool
@@ -32,6 +33,7 @@ var (
 func init() {
 	flag.IntVar(&portNumber, "port", 22, "Port to scan")
 	flag.IntVar(&portNumber, "p", 22, "Port to scan")
+	flag.IntVar(&parallel, "parallel", 32, "Number of simultanius connections")
 	flag.StringVar(&timeout, "timeout", "1000ms", "Network timeout")
 	flag.StringVar(&timeout, "t", "1000ms", "Network timeout")
 	flag.StringVar(&filename, "input", "conf.yaml", "Name of configuration time")
@@ -98,7 +100,7 @@ func main() {
 			fmt.Println("... Trying", configs.Groups[tria].Name, ":", configs.Groups[tria].Networks)
 		}
 		rangs := configs.Groups[tria].Networks
-		resultats, _ := listIP.Check(rangs, portNumber, timeout)
+		resultats, _ := listIP.Check(rangs, portNumber, parallel, timeout)
 		outputFormat(outFile, configs.Groups[tria].Name, resultats)
 	}
 

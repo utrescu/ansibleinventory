@@ -10,7 +10,7 @@ Installation
 -------------------
 First install dependencies:
 
-    $ github.com/utrescu/listIP
+    $ go get github.com/utrescu/listIP
 
 And build:
 
@@ -32,6 +32,8 @@ The program supports different optional parameters that can be seen with '-h'
             Port to scan (default 22)
     -port int
             Port to scan (default 22)
+    -parallel int
+            Number of parallel connections (default 32)
     -t string
             Network timeout (default "1000ms")
     -timeout string
