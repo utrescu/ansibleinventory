@@ -100,7 +100,11 @@ func main() {
 			fmt.Println("... Trying", configs.Groups[tria].Name, ":", configs.Groups[tria].Networks)
 		}
 		rangs := configs.Groups[tria].Networks
-		resultats, _ := listIP.Check(rangs, portNumber, parallel, timeout)
+		resultats, _, err := listIP.Check(rangs, portNumber, parallel, timeout)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 		outputFormat(outFile, configs.Groups[tria].Name, resultats)
 	}
 
